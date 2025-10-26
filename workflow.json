@@ -1,0 +1,2295 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "52202bf9-aa90-467b-972b-6b06a3ee6ce3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [208, 32],
+      "id": "c3a9b277-89f9-4dec-bf5d-c202a8e0dd55",
+      "name": "Webhook",
+      "webhookId": "52202bf9-aa90-467b-972b-6b06a3ee6ce3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4c2ddb45-72ed-4b0d-9f57-8cefd1664882",
+                    "leftValue": "={{ $('information extractor').item.json.messageType }}",
+                    "rightValue": "=conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "53b101ba-b4b6-49ae-afd9-bbba2859fb9f",
+                    "leftValue": "={{ $('information extractor').item.json.messageType }}",
+                    "rightValue": "imageMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a6cf1b9d-eb52-4d17-8242-b1ccdc684c72",
+                    "leftValue": "={{ $('information extractor').item.json.messageType }}",
+                    "rightValue": "audioMessage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [1024, 0],
+      "id": "52c17ff3-ac46-4f63-9d8c-0d5d231baae7",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [1696, 272],
+      "id": "62b5c0bc-6b4b-4874-9c05-b6e580dacc00",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "dm5q6BH4NKxpXkkP",
+          "name": "OpenAi Api"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentType": "image_url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mistralAi",
+      "typeVersion": 1,
+      "position": [1760, 16],
+      "id": "630f7d19-3c72-4a98-93cc-cd8a812760a1",
+      "name": "Extract text",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "zq5pAfbFBfB1Rw1U",
+          "name": "Mistral Cloud - bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9be69159-754d-4616-81d2-162a09bc0bf5",
+              "name": "final_message",
+              "value": "={{ $('information extractor').item.json.text_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1712, -160],
+      "id": "9e458bd6-9842-4b7b-825a-48d80677c3a9",
+      "name": "final_message_text"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9be69159-754d-4616-81d2-162a09bc0bf5",
+              "name": "final_message",
+              "value": "={{ $('information extractor').item.json.text_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1904, 272],
+      "id": "6b4bb0a7-b607-4526-aa02-d3b3a955af2e",
+      "name": "final_message_audio",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9be69159-754d-4616-81d2-162a09bc0bf5",
+              "name": "final_message",
+              "value": "={{ $json.pages[0].markdown }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1952, 16],
+      "id": "4683bcc1-002d-4560-82fe-193d23f70b72",
+      "name": "final_message_img"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b8641139-fa09-4fd2-8399-c6261672bd2a",
+              "leftValue": "={{ $json.telefono_cliente }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [800, 32],
+      "id": "27661605-c866-43c1-aaf4-62262b4cc91d",
+      "name": "¿El numero esta autorizado?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "efbfbfd5-29d3-4ee1-8b12-f9549d76334f",
+              "name": "final_message",
+              "value": "={{ $json.final_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2208, 16],
+      "id": "fe9e1e23-c628-4676-a2f8-c9f77e5031ab",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "text": "=Eres un asistente experto en contabilidad y procesamiento de datos para una empresa en Colombia.\nTu trabajo es analizar el texto que te proporciona el usuario, que puede ser la transcripción de un audio o un texto de una imagen.\nDebes extraer con la máxima precisión los datos de cliente y los ítems de la cotización para rellenar un esquema JSON.\nPresta mucha atención a las cantidades y precios. Si un dato no se menciona explícitamente (como el NIT o el correo), no lo inventes.\nEl texto puede ser informal, pero tu salida debe ser un JSON estructurado y preciso.\nIgnora la informacion inncesaria que no tenga relación con lo solicitado en el json.\nEste es el texto\n{{ $json.final_message }}",
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"properties\": {\n    \"tipo_operacion\": {\n      \"type\": \"string\",\n      \"description\": \"El tipo de documento que se está solicitando. Debe ser 'Cotización' o 'Cuenta de Cobro'.\",\n      \"enum\": [\n        \"Cotización\",\n        \"Cuenta de Cobro\"\n      ]\n    },\n    \"cliente\": {\n      \"properties\": {\n        \"nombre\": {\n          \"type\": \"string\",\n          \"description\": \"Nombre de la persona o empresa cliente\"\n        },\n        \"nit\": {\n          \"type\": \"string\",\n          \"description\": \"NIT o Cédula del cliente\"\n        },\n        \"correo\": {\n          \"type\": \"string\",\n          \"description\": \"Email del cliente al que se debe enviar el documento\"\n        },\n        \"telefono\": {\n          \"type\": \"string\",\n          \"description\": \"Número de teléfono de contacto del cliente\"\n        }\n      },\n      \"type\": \"object\",\n      \"required\": [\n        \"nombre\"\n      ]\n    },\n    \"items\": {\n      \"type\": \"array\",\n      \"description\": \"Lista de todos los productos o servicios solicitados\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"descripcion\": {\n            \"type\": \"string\",\n            \"description\": \"Nombre o descripción del producto o servicio\"\n          },\n          \"cantidad\": {\n            \"type\": \"number\",\n            \"description\": \"La cantidad o número de unidades del ítem\"\n          },\n          \"precio_unitario\": {\n            \"type\": \"number\",\n            \"description\": \"El precio por una sola unidad del ítem\"\n          }\n        },\n        \"required\": [\n          \"descripcion\",\n          \"cantidad\",\n          \"precio_unitario\"\n        ]\n      }\n    }\n  },\n  \"type\": \"object\",\n  \"required\": [\n    \"tipo_operacion\",\n    \"cliente\",\n    \"items\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [256, 608],
+      "id": "bc0aecc8-dd4a-488e-bd15-35cc13230823",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [256, 768],
+      "id": "6a7fc5c8-b515-4045-b607-6952ab3febd1",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "mNyF0ksE4cwUMYuM",
+          "name": "Deepseek"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Extraer\nExtraer la informacion necesaria para crear la cxc o cotización",
+        "height": 352,
+        "width": 1264,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1088, -176],
+      "typeVersion": 1,
+      "id": "c8d572b9-388a-43a8-91bb-6d351466f3b9",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bc2eeef2-8b8a-4b75-b8f3-754d818378e1",
+              "name": "sender",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "d43eceef-4f30-4f28-9e07-3d3a840ddff2",
+              "name": "messageType",
+              "value": "={{ $json.body.data.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "cc367c4e-074f-4353-b8c9-8428575677a0",
+              "name": "text_message",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "2abef94f-aa20-4ffd-ae13-3061fe90cc86",
+              "name": "voice_message",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "93ccb8e9-ae6e-4fdf-b95c-9e48c6e6fe2f",
+              "name": "img_message",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "9b9a21a3-eba6-4a1b-a448-63747b83e486",
+              "name": "session_id",
+              "value": "={{ $json.body.data.key.id }}",
+              "type": "string"
+            },
+            {
+              "id": "3570231d-e647-4791-92b0-8c2e4e8383ed",
+              "name": "numer_celular",
+              "value": "={{ $json.body.data.key.remoteJid.split('@')[0].substring(2) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [384, 32],
+      "id": "37b8f21e-8bf7-4f7f-8281-936b6da3a391",
+      "name": "information extractor"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "audio_message",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [1504, 272],
+      "id": "f2f4bb05-af42-4e7d-a94b-a236a0ea6281",
+      "name": "Convert base 64",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.0.15:8080/message/sendText/n8n-bot",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('information extractor').item.json.sender }}"
+            },
+            {
+              "name": "text",
+              "value": "=Numero no autorizado. Por favor valide con soporte."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [352, -400],
+      "id": "229d4bf8-1249-4ab2-8f76-e17d56096c61",
+      "name": "HTTP Request2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VmR9b5pmj0zjw0AI",
+          "name": "apikey - whatsapp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.0.15:8080/message/sendText/n8n-bot",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('information extractor').item.json.sender }}"
+            },
+            {
+              "name": "text",
+              "value": "=Numero no autorizado. Por favor valide con soporte."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [912, 208],
+      "id": "25d1acb7-c8fb-4014-a8af-cd0b9db2b12b",
+      "name": "Mensaje de no autorización",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VmR9b5pmj0zjw0AI",
+          "name": "apikey - whatsapp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Organizar el JSON con info').item.json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1CHE0LCj7lc942P9qcEOBhApuGQ1ji8cg",
+          "mode": "list",
+          "cachedResultName": "Cxc - Cotizaciones PDF",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1CHE0LCj7lc942P9qcEOBhApuGQ1ji8cg"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2368, 592],
+      "id": "0ec29348-e47f-4f23-837f-086919e09215",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Mejora Pendiete\nEsta mejora queda pendiete, pasar de Audio a Texto, futuras actualizacioones ",
+        "height": 288,
+        "width": 896,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1200, 192],
+      "typeVersion": 1,
+      "id": "f9ff2f79-72e7-4991-b793-f14bdeba6ca4",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Información Valida\nLa validación necesaria por si falta algunos de los datos necesarios ",
+        "height": 432,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [576, 480],
+      "typeVersion": 1,
+      "id": "70ec2b21-ebe7-436d-beff-53d4c0d01c8b",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Extraer Información\nMediante IA se extrae la información necesaria con una estructura definida. \n\nSe hace por este medio ya que nunca se es seguro que información enviaran o como sera enviada.",
+        "height": 432,
+        "width": 576,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 480],
+      "typeVersion": 1,
+      "id": "4d7d25ad-a61e-4e30-8f97-b0ca91e8585c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Pasar de Codigo HTML a PDF\nMediante conexiones a nodos y peticiones HTTP se pasa de codigo a pdf, se descarga y se guarda en un Drive",
+        "height": 256,
+        "width": 848,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1264, 496],
+      "typeVersion": 1,
+      "id": "1b373fa5-bfbe-42c1-a35d-2eeee652b492",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [-480, 1200],
+      "id": "8b934479-6ec4-4362-9d03-16b72f96c249",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "ihvrvCjrAIL5AAOp",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8ca306c8-61d5-4237-b2a8-0b173aacd27d",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "PENDIENTE",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [-272, 1200],
+      "id": "600401d6-1e92-4995-93c2-9b5cae9ec97c",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Cotizaciones - {{ $('Filter').item.json.nombre_cliente }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [512, 1280],
+      "id": "0d04828a-8947-492b-83d1-faae81f3df94",
+      "name": "Crear Carpeta Cotizaciones",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.nombre_cliente }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1hSTpHkOL8JSVG8raShsHG2Ji8ueK6C4Q",
+          "mode": "list",
+          "cachedResultName": "Facturas",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1hSTpHkOL8JSVG8raShsHG2Ji8ueK6C4Q"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [176, 1200],
+      "id": "e2149dc0-a7ab-4f92-9bb5-f86f9e16cf38",
+      "name": "Crear Carpeta Principal",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=CXC - {{ $('Filter').item.json.nombre_cliente }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear Carpeta Principal').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [512, 1120],
+      "id": "b46f9bf5-1b8d-4680-8320-094c7fad83b1",
+      "name": "Crear Carpeta CXC",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1fwUhbeFW6Fsw3Y1_2gMI1qc3n_R2uQNql9JgPmBToHQ",
+          "mode": "list",
+          "cachedResultName": "CXC - Alex Betancur",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fwUhbeFW6Fsw3Y1_2gMI1qc3n_R2uQNql9JgPmBToHQ/edit?usp=drivesdk"
+        },
+        "name": "CXC - Plantilla",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear Carpeta CXC').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [736, 1120],
+      "id": "820826c8-e869-478e-9695-49e4c8d43671",
+      "name": "Mover Sheet CXC",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1fwUhbeFW6Fsw3Y1_2gMI1qc3n_R2uQNql9JgPmBToHQ",
+          "mode": "list",
+          "cachedResultName": "CXC - Alex Betancur",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fwUhbeFW6Fsw3Y1_2gMI1qc3n_R2uQNql9JgPmBToHQ/edit?usp=drivesdk"
+        },
+        "name": "=CXC -  {{ $('Edit Fields').item.json.nombre_cliente }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Crear Carpeta Cotizaciones').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [736, 1280],
+      "id": "313d810f-2d08-46c7-b2cc-ef5eb8218eb6",
+      "name": "Mover Sheet Contizacion",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TeQqQP6Ugn0d8DZk",
+          "name": "Google Drive bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1eb89e67-ad09-47ca-93b7-d00e6c7ade09",
+              "name": "Documento",
+              "value": "={{ $json.Documento }}",
+              "type": "number"
+            },
+            {
+              "id": "32fbdcc7-11a4-4a1d-a5e4-e8cd0b627928",
+              "name": "telefono_cliente",
+              "value": "={{ $json.telefono_cliente }}",
+              "type": "number"
+            },
+            {
+              "id": "0238d8c6-c0b5-4439-96b8-6d5172737cb9",
+              "name": "nombre_cliente",
+              "value": "={{ $json.nombre_cliente }}",
+              "type": "string"
+            },
+            {
+              "id": "c6cc7e35-e909-479b-a1a0-7ec92f0ee134",
+              "name": "status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-64, 1200],
+      "id": "d2b06fd0-5fd7-4ad1-8fcf-68af182ad19e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Documento": "={{ $('Edit Fields').item.json.Documento }}",
+            "status": "PROCESADO",
+            "main_folder_id": "={{ $('Crear Carpeta Principal').item.json.id }}",
+            "main_folder_cxc_id": "={{ $('Crear Carpeta CXC').item.json.id }}",
+            "registro_sheet_cxc_id": "={{ $json.id }}"
+          },
+          "matchingColumns": ["Documento"],
+          "schema": [
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "telefono_cliente",
+              "displayName": "telefono_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_folder_id",
+              "displayName": "main_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_folder_cxc_id",
+              "displayName": "main_folder_cxc_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "registro_sheet_cxc_id",
+              "displayName": "registro_sheet_cxc_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "registro_sheet_cxc_url",
+              "displayName": "registro_sheet_cxc_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "main_folder_cotizacion_id",
+              "displayName": "main_folder_cotizacion_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "main_folder_cotizacion_url",
+              "displayName": "main_folder_cotizacion_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "registro_sheet_cotizacion_id",
+              "displayName": "registro_sheet_cotizacion_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "registro_sheet_cotizacion_url",
+              "displayName": "registro_sheet_cotizacion_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [944, 1120],
+      "id": "b7f129a5-6b42-4e8f-81df-3cb865f78df4",
+      "name": "Actualizar Sheet Con ID cxc",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Documento": "={{ $('Edit Fields').item.json.Documento }}",
+            "status": "PROCESADO",
+            "main_folder_id": "={{ $('Crear Carpeta Principal').item.json.id }}",
+            "main_folder_cotizacion_id": "={{ $('Crear Carpeta Cotizaciones').item.json.id }}",
+            "registro_sheet_cotizacion_id": "={{ $json.id }}"
+          },
+          "matchingColumns": ["Documento"],
+          "schema": [
+            {
+              "id": "Documento",
+              "displayName": "Documento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "telefono_cliente",
+              "displayName": "telefono_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_folder_id",
+              "displayName": "main_folder_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_folder_cxc_id",
+              "displayName": "main_folder_cxc_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "registro_sheet_cxc_id",
+              "displayName": "registro_sheet_cxc_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "registro_sheet_cxc_url",
+              "displayName": "registro_sheet_cxc_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "main_folder_cotizacion_id",
+              "displayName": "main_folder_cotizacion_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_folder_cotizacion_url",
+              "displayName": "main_folder_cotizacion_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "registro_sheet_cotizacion_id",
+              "displayName": "registro_sheet_cotizacion_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "registro_sheet_cotizacion_url",
+              "displayName": "registro_sheet_cotizacion_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [944, 1280],
+      "id": "b9f86db9-c93f-45e6-8706-ad37ed259551",
+      "name": "Actualizar Sheet Con ID Cotizaciones",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Agregar usuarios autorizados\nCada que se ingresa la información de un usuario se crean directorios y archivos sheet en los cuales e guardara la información",
+        "height": 448,
+        "width": 1728,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [-544, 1024],
+      "typeVersion": 1,
+      "id": "668f49b7-c34a-4c5a-8dfa-7f82f0c03e90",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telefono_cliente",
+              "lookupValue": "={{ $('information extractor').item.json.numer_celular }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [576, 32],
+      "id": "5274f779-7f85-4e22-ac78-c091df0070f5",
+      "name": "Consultar numero",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "29883841-5fac-47dd-b5c2-e40629450578",
+              "leftValue": "={{ $json.output.cliente.nombre }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "64f7c786-b0be-4838-aec4-aebb774e93e3",
+              "leftValue": "={{ $json.output.items[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "ca966253-5345-4974-8281-1a1abdf50b2a",
+              "leftValue": "={{ $json.output.items[0].descripcion }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "da0846fb-9d3b-44e4-8988-f684dd5868af",
+              "leftValue": "={{ $json.output.items[0].cantidad }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "09b75a30-33df-49a8-8f7d-8888fcfaf375",
+              "leftValue": "={{ $json.output.items[0].precio_unitario }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [608, 608],
+      "id": "c9389bc1-9338-4df0-88fd-aa7fe793703b",
+      "name": "¿La informacion esta completa?"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "=img_message",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [1552, 16],
+      "id": "8f766378-f4a8-4b59-8950-52c1d6ea1d2f",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b9297128-3ba0-4e2d-8519-fbc067835267",
+              "name": "img_message",
+              "value": "={{ $('information extractor').item.json.img_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1328, 16],
+      "id": "d9cddf84-c18a-4c82-84f3-a5109889cc54",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un asistente de cotizaciones. El usuario te envió una solicitud, pero faltó información clave. Analiza el JSON de la extracción y dile amigablemente qué datos específicos faltan.\n\nEste es el JSON que extraje de tu mensaje:\n{{ $('Information Extractor').item.json.output }}\n\nPor favor, dime qué información clave me falta (como nombre del cliente, NIT o los ítems con sus precios) para poder generar tu cotización.\nLos datos minimos que se necesitan son, nombre y un item con su cantidad y precio."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [720, 816],
+      "id": "3830a438-819f-4e00-a236-cac33d7baee1",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "dm5q6BH4NKxpXkkP",
+          "name": "OpenAi Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.0.15:8080/message/sendText/n8n-bot",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('information extractor').item.json.sender }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1024, 816],
+      "id": "c37088a3-580b-4790-8068-d75017b8d814",
+      "name": "Mensaje informacion no completa",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VmR9b5pmj0zjw0AI",
+          "name": "apikey - whatsapp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b9297128-3ba0-4e2d-8519-fbc067835267",
+              "name": "audio_message",
+              "value": "={{ $('information extractor').item.json.voice_message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1312, 272],
+      "id": "dd135412-4044-4de2-b467-fcc30379fdf3",
+      "name": "Edit Fields3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20",
+          "mode": "list",
+          "cachedResultName": "cxc - cotizaciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [864, 592],
+      "id": "2e0ede36-9254-4ff4-98a8-f84ca0234dd9",
+      "name": "obtener informacion de consecutivos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telefono_cliente",
+              "lookupValue": "={{ $('information extractor').item.json.numer_celular }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1072, 592],
+      "id": "321f89bd-fd19-4033-b31c-ea64739b8164",
+      "name": "Get Info Emisor",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "117881aa-841d-496e-a3d6-e6c2fe173a1c",
+              "leftValue": "={{ $('Organizar el JSON con info').item.json.tipo_operacion }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [2000, 992],
+      "id": "ced4f7fe-43e2-4fd5-9ad4-7e9b73e8c49c",
+      "name": "¿Es una cxc?",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A",
+          "mode": "list",
+          "cachedResultName": "Contactos_autorizados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info Usuarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1h-nWs0fTdR1tsG_80jabuKRvun1ghN3kqOwjFr2u07A/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telefono_cliente",
+              "lookupValue": "={{ $('information extractor').item.json.numer_celular }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [2112, 1152],
+      "id": "8b6dc48f-ef67-48aa-9407-651dfce0f415",
+      "name": "Get Info Emisor1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Get Info Emisor').item.json.main_folder_cotizacion_id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [2272, 1152],
+      "id": "6b525d57-f60c-46aa-a159-55546b3d5afd",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Mejora Pendiete\nEsta mejora queda pendiete, agregar en el respectivo sheet la informacion de cada cliente y su factura",
+        "height": 416,
+        "width": 608,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [1936, 896],
+      "typeVersion": 1,
+      "id": "615a7961-612e-478f-b93c-60ec5cd3ddb3",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- OBTENER DATOS DE ENTRADA ---\n\n// 1. Obtenemos el objeto 'data' del Extractor\nconst data = $('Information Extractor').item.json.output;\n\n// 2. Obtenemos el último ID de Google Sheets\nconst ultimoID = $('obtener informacion de consecutivos').item.json.ID; \n\n// 3. Obtenemos la info del emisor (Tu nodo de G-Sheets)\nconst infoEmisor = $('Get Info Emisor').item.json;\n\n// 4. (IMPORTANTE) Obtenemos el tipo de operación\n//    (MODIFICADO) El valor por defecto ahora es \"CxC\"\nconst tipoOperacion = data.tipo_operacion || \"CxC\"; \n\n// --- LÓGICA DE NOMBRES ---\n\n// 5. Sumamos 1 y formateamos a 3 dígitos\nconst nuevoID = (ultimoID + 1).toString().padStart(3, '0');\n\n// 6. Obtenemos el nombre del cliente\nconst nombreCliente = data.cliente.nombre;\n\n// 7. Creamos el nombre del archivo dinámicamente\nconst fileName = `${nuevoID} ${tipoOperacion} ${nombreCliente}.pdf`;\n\n// --- LÓGICA DE CÁLCULO (Sin cambios) ---\n\nlet subtotal = 0;\nfor (const item of data.items) {\n  item.valor_total_item = item.cantidad * item.precio_unitario;\n  subtotal += item.valor_total_item;\n}\nconst iva = subtotal * 0.19;\nconst total_factura = subtotal + iva;\n\ndata.totales = {\n  subtotal: subtotal,\n  iva: iva,\n  total_factura: total_factura\n};\n\n// --- DEVOLVER TODO COMBINADO ---\n\nreturn {\n  ...data,\n  infoEmisor: infoEmisor,\n  tipoOperacion: tipoOperacion,\n  fileName: fileName,\n  nuevoID: nuevoID\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1344, 592],
+      "id": "32c98020-8d73-4a13-bf6b-96aea440c153",
+      "name": "Organizar el JSON con info"
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODO CODE (Generador de HTML v6 - Diseño con Tablas 100% compatible)\n\nconst data = $json;\nlet itemsTabla = '';\n\n// 1. Obtenemos el consecutivo del nombre del archivo\nconst consecutivo = $json.fileName ? $json.fileName.split(' ')[0] : 'N/A';\n\n// 2. Creamos las filas de la tabla de ítems\nfor (const item of data.items) {\n  itemsTabla += `\n    <tr class=\"item-row\">\n      <td>${item.descripcion}</td>\n      <td class=\"text-right\">$${item.precio_unitario.toLocaleString('es-CO')}</td>\n      <td class=\"text-right\">${item.cantidad}</td>\n      <td class=\"text-right\">$${item.valor_total_item.toLocaleString('es-CO')}</td>\n    </tr>\n  `;\n}\n\n// 3. Creamos el HTML completo con estilos\nconst html = `\n<html>\n<head>\n  <style>\n    /* Estilos Generales */\n    body {\n      font-family: Arial, Helvetica, sans-serif;\n      color: #343a40;\n      margin: 0;\n      padding: 0;\n      background-color: #f8f9fa;\n      font-size: 14px;\n    }\n    .container {\n      width: 90%;\n      max-width: 800px;\n      margin: 20px auto;\n      padding: 30px;\n      background: #ffffff;\n      border-radius: 8px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.05);\n      border-top: 5px solid #0056b3;\n    }\n    .text-right {\n      text-align: right;\n    }\n    \n    /* --- MAQUETACIÓN CON TABLAS --- */\n    .layout-table {\n      width: 100%;\n      border-collapse: collapse;\n    }\n    .layout-table td {\n      padding: 0;\n      vertical-align: top;\n    }\n\n    /* --- ENCABEZADO --- */\n    .header h1 {\n      margin: 0;\n      color: #0056b3;\n      font-size: 2.2em;\n      font-weight: 700;\n    }\n    .consecutivo {\n      text-align: right;\n      color: #555;\n    }\n    .consecutivo h2 {\n      margin: 0 0 5px 0;\n      color: #343a40;\n      font-weight: 700;\n      font-size: 1.4em;\n    }\n    .consecutivo span {\n      font-size: 0.9em;\n    }\n\n    /* --- Contenedor Dual (Cliente y Emisor) --- */\n    .info-box {\n      font-size: 0.9em;\n      line-height: 1.6;\n      padding: 15px;\n      background: #f9f9f9;\n      border-radius: 5px;\n    }\n    .info-box h3 {\n      margin-top: 0;\n      margin-bottom: 15px;\n      color: #0056b3;\n      border-bottom: 2px solid #dee2e6;\n      padding-bottom: 8px;\n      font-weight: 600;\n      font-size: 1.1em;\n    }\n    .info-box p {\n      margin: 4px 0;\n      color: #495057;\n    }\n    .info-box p strong {\n      color: #343a40;\n      font-weight: 500;\n    }\n    \n    /* Espacio entre las cajas de info */\n    .info-spacer {\n      width: 20px;\n    }\n\n    /* --- TABLA DE ÍTEMS --- */\n    .items-table {\n      width: 100%;\n      border-collapse: collapse;\n      margin-bottom: 30px;\n      margin-top: 30px;\n    }\n    .items-table th, .items-table td {\n      padding: 12px 15px;\n      border-bottom: 1px solid #dee2e6;\n      text-align: left;\n    }\n    .items-table th {\n      background-color: #f1f3f5;\n      color: #343a40;\n      font-weight: 600;\n      font-size: 0.9em;\n      text-transform: uppercase;\n    }\n\n    /* --- TOTALES --- */\n    .totales-container {\n      text-align: right; /* Alinea la tabla a la derecha */\n      margin-top: 20px;\n    }\n    .totales-table {\n      width: 45%;\n      max-width: 350px;\n      border-collapse: collapse;\n      display: inline-block; /* Permite que el text-align funcione */\n    }\n    .totales-table td {\n      padding: 10px 12px;\n      font-weight: 500;\n    }\n    .totales-table td.total-label {\n      color: #495057;\n      text-align: left;\n    }\n    .totales-table td.total-value {\n      text-align: right;\n      font-weight: 600;\n    }\n    .total-final td {\n      font-size: 1.4em;\n      background-color: #0056b3;\n      color: white;\n      border-radius: 5px;\n      padding: 12px;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    \n    <table class=\"layout-table\" style=\"margin-bottom: 30px;\">\n      <tr>\n        <td>\n          <h1>${(data.tipoOperacion || 'DOCUMENTO').toUpperCase()}</h1> \n        </td>\n        <td class=\"consecutivo\">\n          <h2>No. ${consecutivo}</h2>\n          <span>Fecha: ${new Date().toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })}</span>\n        </td>\n      </tr>\n    </table>\n\n    <table class=\"layout-table\" style=\"margin-bottom: 30px;\">\n      <tr>\n        <td style=\"width: 50%;\">\n          <div class=\"info-box\">\n            <h3>Para:</h3>\n            <p><strong>${data.cliente.nombre || 'N/A'}</strong></p>\n            <p>NIT/CC: ${data.cliente.nit || 'N/A'}</p>\n            <p>Tel: ${data.cliente.telefono || 'N/A'}</p>\n            <p>Email: ${data.cliente.correo || 'N/A'}</p> \n          </div>\n        </td>\n        \n        <td class=\"info-spacer\"></td>\n        \n        <td style=\"width: 50%;\">\n          <div class=\"info-box\">\n            <h3>De:</h3>\n            <p><strong>${data.infoEmisor.nombre_cliente || 'N/A'}</strong></p>\n            <p>NIT/CC: ${data.infoEmisor.Documento || 'N/A'}</p>\n            <p>Tel: ${data.infoEmisor.telefono_cliente || 'N/A'}</p>\n            <p>Email: ${data.infoEmisor.Email || 'N/A'}</p>\n          </div>\n        </td>\n      </tr>\n    </table>\n\n    <h2 style=\"font-size: 1.5em; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;\">Detalle</h2>\n    <table class=\"items-table\">\n      <thead>\n        <tr>\n          <th>Descripción</th>\n          <th class=\"text-right\">P. Unitario</th>\n          <th class=\"text-right\">Cant.</th>\n          <th class=\"text-right\">Total</th>\n        </tr>\n      </thead>\n      <tbody>\n        ${itemsTabla}\n      </tbody>\n    </table>\n\n    <div class=\"totales-container\">\n      <table class=\"totales-table\">\n        <tr>\n          <td class=\"total-label\">Subtotal:</td>\n          <td class=\"total-value\">$${data.totales.subtotal.toLocaleString('es-CO')}</td>\n        </tr>\n        <tr>\n          <td class=\"total-label\">IVA (19%):</td>\n          <td class=\"total-value\">$${data.totales.iva.toLocaleString('es-CO')}</td>\n        </tr>\n        <tr class=\"total-final\">\n          <td class=\"total-label\">TOTAL:</td>\n          <td class=\"total-value\">$${data.totales.total_factura.toLocaleString('es-CO')}</td>\n        </tr>\n      </table>\n    </div>\n\n  </div>\n</body>\n</html>\n`;\n\n// 4. Devolvemos el HTML\nreturn {\n  json: {\n    ...data, // Pasamos todos los datos anteriores\n    html_output: html\n  },\n  binary: {} \n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1536, 592],
+      "id": "bbc3f90c-2e15-4e5c-874f-f65a632e1460",
+      "name": "Code - Codigo para generar html de la factura"
+    },
+    {
+      "parameters": {
+        "resource": "html-to-pdf",
+        "html": "={{ $json.html_output }}",
+        "pdfParams": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-pdforge.pdforge",
+      "typeVersion": 1,
+      "position": [1744, 592],
+      "id": "8051db3c-4af8-47ba-b292-1212079cf08a",
+      "name": "Convertir HTML a PDF",
+      "credentials": {
+        "pdforgeApi": {
+          "id": "rh31tAHDVaBsDy98",
+          "name": "Pdforge account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.signedUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1968, 592],
+      "id": "fa3c530e-f7c7-42df-a28f-20b89d9df726",
+      "name": "Descarga el PDF"
+    },
+    {
+      "parameters": {
+        "content": "## Inico\nMediante un webhook con Evolution API se conecta a WhatsApp, permite recibir Imagenes y Texto",
+        "height": 240,
+        "width": 400,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [96, -80],
+      "typeVersion": 1,
+      "id": "a34f31b6-8147-4335-8808-a6042a841cb2",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Validaciones \nNecesarias para ver si el numero esta autorizado",
+        "height": 464,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [512, -96],
+      "typeVersion": 1,
+      "id": "ccafff2b-a5de-4c6f-b835-52f90eb3c141",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## Cargar y actualizar \nSe carga el archivo y se actualiza el Sheet con la info, mejora pendiete para que sea mas dinamico",
+        "height": 256,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [2128, 496],
+      "typeVersion": 1,
+      "id": "efa0e3a7-e426-4c7d-aeb6-2dd6d371d165",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [2224, 976],
+      "id": "4a35f3e5-0e1f-40eb-8263-752829cc38b3",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20",
+          "mode": "list",
+          "cachedResultName": "cxc - cotizaciones",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ULhjabjOUApqwy-xoKZAHycTmwCBbGdy-I0HF2Tby20/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "link_pdf": "={{ $json.webViewLink }}",
+            "ID": "={{ $('Code - Codigo para generar html de la factura').item.json.nuevoID }}",
+            "fecha": "={{ $now.format('yyyy-MM-dd') }}",
+            "cliente": "={{ $('Organizar el JSON con info').item.json.cliente.nombre }}",
+            "documento": "={{ $('Organizar el JSON con info').item.json.cliente.documento }}",
+            "correo_electronico": "={{ $('Organizar el JSON con info').item.json.cliente.correo }}",
+            "celular": "={{ $('Organizar el JSON con info').item.json.cliente.celular }}",
+            "Total": "={{ $('Organizar el JSON con info').item.json.totales.total_factura }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cliente",
+              "displayName": "cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "documento",
+              "displayName": "documento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "correo_electronico",
+              "displayName": "correo_electronico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "celular",
+              "displayName": "celular",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total",
+              "displayName": "Total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "link_pdf",
+              "displayName": "link_pdf",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [2592, 592],
+      "id": "e91b8b71-8d49-4c2a-b13c-7b67e90cf538",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jCs4iHyQp5EXOepo",
+          "name": "Google Sheets bjautomatizacion@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://192.168.0.15:8080/message/sendText/n8n-bot",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('information extractor').item.json.sender }}"
+            },
+            {
+              "name": "text",
+              "value": "=Numero no autorizado. Por favor valide con soporte."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2304, 784],
+      "id": "70b397f2-a81b-41ee-800a-c737a340aad1",
+      "name": "Envio de Confirmacion - Correcto",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VmR9b5pmj0zjw0AI",
+          "name": "apikey - whatsapp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "659c4dd7-8e30-4ea8-9061-5ab078919c95",
+              "name": "sender",
+              "value": "={{ $('information extractor').item.json.sender }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2080, 784],
+      "id": "2e044e43-2859-4c34-b58b-e279eea91d12",
+      "name": "Edit Fields4"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "information extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "final_message_text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "final_message_audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract text": {
+      "main": [
+        [
+          {
+            "node": "final_message_img",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "final_message_text": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "final_message_audio": {
+      "main": [[]]
+    },
+    "final_message_img": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿El numero esta autorizado?": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mensaje de no autorización",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "¿La informacion esta completa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "information extractor": {
+      "main": [
+        [
+          {
+            "node": "Consultar numero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert base 64": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Carpeta Cotizaciones": {
+      "main": [
+        [
+          {
+            "node": "Mover Sheet Contizacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Carpeta Principal": {
+      "main": [
+        [
+          {
+            "node": "Crear Carpeta CXC",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Crear Carpeta Cotizaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Carpeta CXC": {
+      "main": [
+        [
+          {
+            "node": "Mover Sheet CXC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mover Sheet CXC": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Sheet Con ID cxc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mover Sheet Contizacion": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Sheet Con ID Cotizaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Crear Carpeta Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar numero": {
+      "main": [
+        [
+          {
+            "node": "¿El numero esta autorizado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿La informacion esta completa?": {
+      "main": [
+        [
+          {
+            "node": "obtener informacion de consecutivos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "Extract text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Mensaje informacion no completa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Convert base 64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener informacion de consecutivos": {
+      "main": [
+        [
+          {
+            "node": "Get Info Emisor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Info Emisor": {
+      "main": [
+        [
+          {
+            "node": "Organizar el JSON con info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es una cxc?": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Info Emisor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Info Emisor1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organizar el JSON con info": {
+      "main": [
+        [
+          {
+            "node": "Code - Codigo para generar html de la factura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Codigo para generar html de la factura": {
+      "main": [
+        [
+          {
+            "node": "Convertir HTML a PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir HTML a PDF": {
+      "main": [
+        [
+          {
+            "node": "Descarga el PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descarga el PDF": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [[]]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Envio de Confirmacion - Correcto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a6a5b1d5acf716369305b4b8dbe0db129377adf2e103c6b0c0a1579887eba4a"
+  }
+}
